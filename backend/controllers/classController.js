@@ -14,8 +14,7 @@ export const getClasses = async (req, res) => {
 export const getStudentsByClass = async (req, res) => {
   try {
     const { classId } = req.params;
-    // Populate classId field to get class details
-    const students = await User.find({ classId }).populate('classId', 'name');
+    const students = await User.find({ classId, role: "student" }).populate('classId', 'name');
     res.json(students);
   } catch (error) {
     console.error('Error fetching students:', error);

@@ -5,7 +5,7 @@ import jwt from 'jsonwebtoken';
 // Controller to get users with role "teacher"
 export const getTeachers = async (req, res) => {
   try {
-    const teachers = await User.find({ role: "teacher" }).select("-password").populate("classId");
+    const teachers = await User.find({ role: "teacher" }).select("-password");
     res.json(teachers);
   } catch (error) {
     console.error("Error in getTeachers:", error);
@@ -55,16 +55,18 @@ export const signupController = async (req, res) => {
     email,
     password: hashedPassword,
     role,
-    classId: role === "student" ? classId : undefined,
-    classId: role === "teacher" ? classId : undefined,
+    classId: role === "student" || role === "teacher" ? classId : undefined,
   });
   await newUser.save();
 
-  const token = jwt.sign({ id: newUser._id, role: newUser.role }, process.env.JWT_SECRET, {
+  // Populate classId before sending response
+  const populatedUser = await User.findById(newUser._id).populate('classId');
+
+  const token = jwt.sign({ id: populatedUser._id, role: populatedUser.role }, process.env.JWT_SECRET, {
     expiresIn: "1d",
   });
 
-  res.status(201).json({ token, user: newUser });
+  res.status(201).json({ token, user: populatedUser });
 }
 
 //Auth Check
