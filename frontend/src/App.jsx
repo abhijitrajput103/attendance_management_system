@@ -1,25 +1,19 @@
-import React, { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { useAuthStore } from "./store/useAuthStore";
-
-// Components
-import Navbar from "./components/Navbar";
+import { Toaster } from "react-hot-toast";
 import Sidebar from "./components/Sidebar";
-
-// Pages
+import Navbar from "./components/Navbar";
 import Dashboard from "./pages/Dashboard";
+import StudentDashboard from "./pages/StudentDashboard";
 import MarkAttendance from "./pages/MarkAttendance";
 import AttendanceReport from "./pages/AttendanceReport";
 import Teachers from "./pages/Teachers";
-
-import Login from "./pages/Login";
-import Signup from "./pages/Signup";
-import { Toaster } from "react-hot-toast";
 import ClassManagement from "./pages/ClassManagement";
 import UserManagement from "./pages/UserManagement";
-import StudentDashboard from "./pages/StudentDashboard";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
 
-// Protected route component
 const ProtectedRoute = ({ children }) => {
   const authUser = useAuthStore((state) => state.authUser);
   if (!authUser) {
@@ -32,21 +26,40 @@ const App = () => {
   const authUser = useAuthStore((state) => state.authUser);
   const initializeAuth = useAuthStore((state) => state.initializeAuth);
 
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+
   useEffect(() => {
     initializeAuth();
   }, [initializeAuth]);
+
+  const toggleSidebar = () => {
+    setSidebarOpen(!sidebarOpen);
+  };
 
   return (
     <>
       <Router>
         <div className="flex h-screen overflow-hidden">
           {/* Sidebar */}
-          {authUser && <Sidebar user={authUser} />}
+          {authUser && <Sidebar user={authUser} isOpen={sidebarOpen} />}
+
+          {/* Overlay for small screens */}
+          {authUser && sidebarOpen && (
+            <div
+              className="fixed inset-0 bg-black bg-opacity-50 z-20 md:hidden"
+              onClick={toggleSidebar}
+              aria-hidden="true"
+            />
+          )}
 
           {/* Main Content */}
-          <div className="flex flex-col flex-1 overflow-hidden">
+          <div
+            className={`flex flex-col flex-1 overflow-hidden transition-padding duration-300 ease-in-out ${
+              sidebarOpen ? "md:pl-64" : "md:pl-0"
+            }`}
+          >
             {/* Navbar */}
-            {authUser && <Navbar user={authUser} />}
+            {authUser && <Navbar user={authUser} toggleSidebar={toggleSidebar} />}
 
             {/* Content */}
             <div className="flex flex-col flex-1 overflow-y-auto bg-gray-100 p-6">

@@ -2,7 +2,7 @@ import { useNavigate, NavLink } from "react-router-dom";
 import { Home, ClipboardList, Users, BookOpen, LogOut } from "lucide-react";
 import { useAuthStore } from "../store/useAuthStore";
 
-const Sidebar = ({ user }) => {
+const Sidebar = ({ user, isOpen }) => {
   const navigate = useNavigate();
   const logout = useAuthStore((state) => state.logout);
 
@@ -12,7 +12,10 @@ const Sidebar = ({ user }) => {
   };
 
   return (
-    <aside className="w-64 bg-white shadow p-4 flex flex-col h-full">
+    <aside
+      className={`bg-white shadow p-4 flex flex-col h-full fixed md:static top-0 left-0 z-30 transform transition-transform duration-300 ease-in-out
+        ${isOpen ? "translate-x-0" : "-translate-x-full"} w-64`}
+    >
       {/* Logo */}
       <div className="text-xl font-bold text-indigo-500 mb-4">School</div>
 

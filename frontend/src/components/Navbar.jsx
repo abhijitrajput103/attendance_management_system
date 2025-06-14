@@ -1,8 +1,17 @@
-import { Search, Bell } from "lucide-react";
+import { Menu, Search, Bell } from "lucide-react";
 
-const Navbar = ({ user }) => {
+const Navbar = ({ user, toggleSidebar }) => {
   return (
     <nav className="bg-white shadow px-4 py-3 flex items-center justify-between">
+      {/* Hamburger toggle button */}
+      <button
+        onClick={toggleSidebar}
+        className="p-2 mr-4 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 md:hidden"
+        aria-label="Toggle sidebar"
+      >
+        <Menu className="w-6 h-6 text-gray-700" />
+      </button>
+
       {/* Specify Dashboard */}
       <div className="text-xl font-bold text-blue-500 me-20"> {user.role.charAt(0).toUpperCase() + user.role.slice(1)} Dashboard</div>
 

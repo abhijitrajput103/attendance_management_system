@@ -20,14 +20,14 @@ let count = 1;
 
 for (let i = 0; i < classIds.length; i++) {
   for (let j = 0; j < 5; j++) {
-    const username = `student${count}`;
-    const hashedPassword = await bcrypt.hash(username, 10); // hash the password
+    const username = `teacher${count}`;
+    const hashedPassword = await bcrypt.hash(username, 10);
 
     seedUsers.push({
-      name: `student ${count}`,
+      name: `teacher ${count}`,
       email: `${username}@gmail.com`,
       password: hashedPassword,
-      role: "student",
+      role: "teacher",
       classId: classIds[i],
     });
     count++;
@@ -37,7 +37,6 @@ for (let i = 0; i < classIds.length; i++) {
 const seedDatabase = async () => {
   try {
     await connectDB();
-    await User.deleteMany();
     await User.insertMany(seedUsers);
     console.log("✅ Database seeded successfully with hashed passwords.");
   } catch (error) {
