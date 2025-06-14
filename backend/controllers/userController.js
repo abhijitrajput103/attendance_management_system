@@ -16,7 +16,7 @@ export const getTeachers = async (req, res) => {
 // Controller to get users with role "student"
 export const getStudents = async (req, res) => {
   try {
-    const students = await User.find({ role: "student" }).select("-password");
+    const students = await User.find({ role: "student" }).select("-password").populate("classId");
     res.json(students);
   } catch (error) {
     console.error("Error in getStudents:", error);
@@ -56,6 +56,7 @@ export const signupController = async (req, res) => {
     password: hashedPassword,
     role,
     classId: role === "student" ? classId : undefined,
+    classId: role === "teacher" ? classId : undefined,
   });
   await newUser.save();
 

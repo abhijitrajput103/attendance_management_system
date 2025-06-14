@@ -1,29 +1,43 @@
-import jwt from 'jsonwebtoken';
-import User from "../models/UserModel.js"
+import jwt from "jsonwebtoken";
+import User from "../models/UserModel.js";
 
-const protect = (roles = []) => async (req, res, next) => {
-  let token;
-  if (
-    req.headers.authorization &&
-    req.headers.authorization.startsWith("Bearer")
-  ) {
-    token = req.headers.authorization.split(" ")[1];
+const protect = (roles = []) => {
+  if (typeof roles === "string") {
+    roles = [roles];
   }
 
-  if (!token) {
-    return res.status(401).json({ msg: "Not authorized, no token" });
-  }
+  return async (req, res, next) => {
+    let token;
 
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = await User.findById(decoded.id);
-    if (roles.length && !roles.includes(req.user.role)) {
-      return res.status(403).json({ msg: "Forbidden: Role not allowed" });
+    if (
+      req.headers.authorization &&
+      req.headers.authorization.startsWith("Bearer")
+    ) {
+      token = req.headers.authorization.split(" ")[1];
     }
-    next();
-  } catch (err) {
-    return res.status(401).json({ msg: "Token is not valid" });
-  }
+
+    if (!token) {
+      return res.status(401).json({ msg: "Not authorized, no token" });
+    }
+
+    try {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      req.user = await User.findById(decoded.id);
+
+      if (!req.user) {
+        return res.status(401).json({ msg: "User not found" });
+      }
+
+      if (roles.length && !roles.includes(req.user.role)) {
+        return res.status(403).json({ msg: "Forbidden: Role not allowed" });
+      }
+
+      next();
+    } catch (err) {
+      console.error(err);
+      return res.status(401).json({ msg: "Token is not valid" });
+    }
+  };
 };
 
 export default protect;

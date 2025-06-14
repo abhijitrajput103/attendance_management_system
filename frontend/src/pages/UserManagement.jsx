@@ -1,12 +1,14 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { axiosInstance } from "../lib/axios";
 
 const UserManagement = () => {
   const [activeTab, setActiveTab] = useState("teachers");
   const [users, setUsers] = useState([]);
+  const [classes, setClasses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // Fetch teachers or students
   const fetchUsers = async (role) => {
     try {
       setLoading(true);
@@ -21,9 +23,23 @@ const UserManagement = () => {
     }
   };
 
+  // Fetch all classes once
+  const fetchClasses = async () => {
+    try {
+      const response = await axiosInstance.get("/classes");
+      setClasses(response.data);
+    } catch (err) {
+      console.error("Failed to fetch classes", err);
+    }
+  };
+
   useEffect(() => {
     fetchUsers(activeTab);
   }, [activeTab]);
+
+  useEffect(() => {
+    fetchClasses();
+  }, []);
 
   return (
     <div className="p-4">
@@ -63,13 +79,24 @@ const UserManagement = () => {
             </tr>
           </thead>
           <tbody>
-            {users.map((user) => (
-              <tr key={user._id}>
-                <td className="border border-gray-300 p-2">{user.name}</td>
-                <td className="border border-gray-300 p-2">{user.email}</td>
-                <td className="border border-gray-300 p-2">{user.class}</td>
-              </tr>
-            ))}
+            {users.map((user) => {
+              let className = "N/A";
+              if (activeTab === "teachers") {
+                className = classes.find((cls) => cls.teacherId === user._id)?.name || "N/A";
+              } else {
+                className = user.classId
+                  ? classes.find((cls) => cls._id === user.classId?._id)?.name || "N/A"
+                  : "N/A";
+              }
+
+              return (
+                <tr key={user._id}>
+                  <td className="border border-gray-300 p-2">{user.name}</td>
+                  <td className="border border-gray-300 p-2">{user.email}</td>
+                  <td className="border border-gray-300 p-2">{className}</td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       )}
