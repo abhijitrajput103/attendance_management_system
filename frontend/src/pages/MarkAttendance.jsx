@@ -1,4 +1,4 @@
-import  { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { axiosInstance } from "../lib/axios";
 import AttendanceTable from "../components/AttendanceTable";
 import ProgressBars from "../components/Progressbars";
@@ -15,7 +15,7 @@ const MarkAttendance = () => {
   const [successMessage, setSuccessMessage] = useState(null);
   const [attendanceSummary, setAttendanceSummary] = useState([]);
   const [activities, setActivities] = useState([]);
-  // const [lineChartData, setLineChartData] = useState(null);
+  const [lineChartData, setLineChartData] = useState(null);
 
   useEffect(() => {
     const fetchClasses = async () => {

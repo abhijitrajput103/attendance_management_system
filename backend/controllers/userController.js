@@ -5,7 +5,7 @@ import jwt from 'jsonwebtoken';
 // Controller to get users with role "teacher"
 export const getTeachers = async (req, res) => {
   try {
-    const teachers = await User.find({ role: "teacher" }).select("-password");
+    const teachers = await User.find({ role: "teacher" }).select("-password").populate("classId");
     res.json(teachers);
   } catch (error) {
     console.error("Error in getTeachers:", error);

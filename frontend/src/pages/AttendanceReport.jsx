@@ -11,7 +11,14 @@ const AttendanceReport = () => {
     const fetchAttendanceReport = async () => {
       try {
         const res = await axiosInstance.get("/attendance/report");
-        setAttendanceData(res.data);
+        console.log("Attendance report response data:", res.data);
+        if (Array.isArray(res.data)) {
+          setAttendanceData(res.data);
+        } else {
+          console.error("Unexpected attendance report data format:", res.data);
+          setError("Unexpected data format received from server.");
+          setAttendanceData([]);
+        }
       } catch (err) {
         setError("Failed to fetch attendance report.");
       } finally {

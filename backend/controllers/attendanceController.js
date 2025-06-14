@@ -60,3 +60,54 @@ export const getAttendanceReport = async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 };
+
+export const getAttendanceSummary = async (req, res) => {
+  try {
+    // Aggregate attendance data grouped by classId
+    const summary = await Attendance.aggregate([
+      {
+        $unwind: "$records"
+      },
+      {
+        $group: {
+          _id: "$classId",
+          totalRecords: { $sum: 1 },
+          presentCount: {
+            $sum: {
+              $cond: [{ $eq: ["$records.status", "Present"] }, 1, 0]
+            }
+          }
+        }
+      },
+      {
+        $lookup: {
+          from: "classes",
+          localField: "_id",
+          foreignField: "_id",
+          as: "classInfo"
+        }
+      },
+      {
+        $unwind: "$classInfo"
+      },
+      {
+        $project: {
+          _id: 0,
+          classId: "$_id",
+          name: "$classInfo.name",
+          attendance: {
+            $multiply: [
+              { $divide: ["$presentCount", "$totalRecords"] },
+              100
+            ]
+          }
+        }
+      }
+    ]);
+
+    res.json(summary);
+  } catch (error) {
+    console.error('Error fetching attendance summary:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
