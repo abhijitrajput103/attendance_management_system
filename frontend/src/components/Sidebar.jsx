@@ -2,7 +2,7 @@ import { useNavigate, NavLink } from "react-router-dom";
 import { Home, ClipboardList, Users, BookOpen, LogOut } from "lucide-react";
 import { useAuthStore } from "../store/useAuthStore";
 
-const Sidebar = ({ user, isOpen }) => {
+const Sidebar = ({ user, isOpen, toggleSidebar }) => {
   const navigate = useNavigate();
   const logout = useAuthStore((state) => state.logout);
 
@@ -11,116 +11,75 @@ const Sidebar = ({ user, isOpen }) => {
     navigate("/login", { replace: true });
   };
 
+  const navClass = ({ isActive }) =>
+    `flex items-center p-2 rounded ${
+      isActive ? "bg-indigo-100 font-semibold text-indigo-600" : ""
+    }`;
+
   return (
     <aside
-      className={`bg-white shadow p-4 flex flex-col h-full fixed md:static top-0 left-0 z-30 transform transition-transform duration-300 ease-in-out
-        ${isOpen ? "translate-x-0" : "-translate-x-full"} w-64`}
+      className={`bg-white shadow p-4 flex flex-col h-full absolute md:static top-0 left-0 z-30 transform transition-transform duration-300 ease-in-out
+        ${isOpen ? "translate-x-0" : "-translate-x-full"} w-64 max-w-full md:w-64`}
+      aria-label="Sidebar Navigation"
     >
-      {/* Logo */}
       <div className="text-xl font-bold text-indigo-500 mb-4">School</div>
 
-      {/* Main Section */}
       <h3 className="text-sm font-semibold mb-2">MAIN</h3>
       <ul className="space-y-2">
         {user?.role !== "student" && (
           <li>
-            <NavLink
-              to="/"
-              className={({ isActive }) =>
-                `flex items-center p-2 rounded ${isActive ? "bg-indigo-100 font-semibold text-indigo-600" : ""
-                }`
-              }
-            >
+            <NavLink to="/" end className={navClass} onClick={toggleSidebar}>
               <Home className="mr-2 w-4 h-4" />
               Dashboard
             </NavLink>
           </li>
         )}
 
-        {/* Role: Teacher */}
         {user?.role === "teacher" && (
           <li>
-            <NavLink
-              to="/mark-attendance"
-              className={({ isActive }) =>
-                `flex items-center p-2 rounded ${isActive ? "bg-indigo-100 font-semibold text-indigo-600" : ""
-                }`
-              }
-            >
+            <NavLink to="/mark-attendance" className={navClass} onClick={toggleSidebar}>
               <ClipboardList className="mr-2 w-4 h-4" />
               Mark Attendance
             </NavLink>
           </li>
         )}
 
-        {/* Role: Student */}
         {user?.role === "student" && (
-          <ul>
+          <>
             <li>
-              <NavLink
-                to="/studentsdashboard"
-                className={({ isActive }) =>
-                  `flex items-center p-2 rounded ${isActive ? "bg-indigo-100 font-semibold text-indigo-600" : ""
-                  }`
-                }
-              >
+              <NavLink to="/studentsdashboard" className={navClass} onClick={toggleSidebar}>
                 <Home className="mr-2 w-4 h-4" />
                 Dashboard
               </NavLink>
             </li>
             <li>
-              <NavLink
-                to="/attendance-report"
-                className={({ isActive }) =>
-                  `flex items-center p-2 rounded ${isActive ? "bg-indigo-100 font-semibold text-indigo-600" : ""
-                  }`
-                }
-              >
+              <NavLink to="/attendance-report" className={navClass} onClick={toggleSidebar}>
                 <ClipboardList className="mr-2 w-4 h-4" />
                 My Attendance
               </NavLink>
             </li>
-          </ul>
+          </>
         )}
-      </ul>
 
-      {/* Administration Section: Only for Admin */}
-      {user?.role === "admin" && (
-        <>
-          <h3 className="text-sm font-semibold mt-2 mb-2">ADMINISTRATION</h3>
-          <ul className="space-y-2">
+        {user?.role === "admin" && (
+          <>
+            <h3 className="text-sm font-semibold mt-6 mb-2">ADMINISTRATION</h3>
             <li>
-              <NavLink
-                to="/user-management"
-                className={({ isActive }) =>
-                  `flex items-center p-2 rounded ${isActive ? "bg-indigo-100 font-semibold text-indigo-600" : ""
-                  }`
-                }
-              >
+              <NavLink to="/user-management" className={navClass} onClick={toggleSidebar}>
                 <Users className="mr-2 w-4 h-4" />
                 User Management
               </NavLink>
             </li>
             <li>
-              <NavLink
-                to="/classes"
-                className={({ isActive }) =>
-                  `flex items-center p-2 rounded ${isActive ? "bg-indigo-100 font-semibold text-indigo-600" : ""
-                  }`
-                }
-              >
+              <NavLink to="/classes" className={navClass} onClick={toggleSidebar}>
                 <BookOpen className="mr-2 w-4 h-4" />
                 Class Management
               </NavLink>
             </li>
-            <li>
-            </li>
-          </ul>
-        </>
-      )}
+          </>
+        )}
+      </ul>
 
-
-      {/* Logout Button */}
       <div className="mt-auto">
         <button
           onClick={handleLogout}

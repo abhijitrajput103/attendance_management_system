@@ -70,35 +70,37 @@ const UserManagement = () => {
       ) : users.length === 0 ? (
         <div>No {activeTab} found.</div>
       ) : (
-        <table className="w-full border-collapse border border-gray-300">
-          <thead>
-            <tr>
-              <th className="border border-gray-300 p-2">Name</th>
-              <th className="border border-gray-300 p-2">Email</th>
-              <th className="border border-gray-300 p-2">Class</th>
-            </tr>
-          </thead>
-          <tbody>
-            {users.map((user) => {
-              let className = "N/A";
-              if (activeTab === "teachers") {
-                className = classes.find((cls) => cls.teacherId === user._id)?.name || "N/A";
-              } else {
-                className = user.classId
-                  ? classes.find((cls) => cls._id === user.classId?._id)?.name || "N/A"
-                  : "N/A";
-              }
+        <div className="overflow-x-auto">
+          <table className="w-full border-collapse border border-gray-300 min-w-[600px]">
+            <thead>
+              <tr>
+                <th className="border border-gray-300 p-2">Name</th>
+                <th className="border border-gray-300 p-2">Email</th>
+                <th className="border border-gray-300 p-2">Class</th>
+              </tr>
+            </thead>
+            <tbody>
+              {users.map((user) => {
+                let className = "N/A";
+                if (activeTab === "teachers") {
+                  className = classes.find((cls) => cls.teacherId === user._id)?.name || "N/A";
+                } else {
+                  className = user.classId
+                    ? classes.find((cls) => cls._id === user.classId?._id)?.name || "N/A"
+                    : "N/A";
+                }
 
-              return (
-                <tr key={user._id}>
-                  <td className="border border-gray-300 p-2">{user.name}</td>
-                  <td className="border border-gray-300 p-2">{user.email}</td>
-                  <td className="border border-gray-300 p-2">{className}</td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+                return (
+                  <tr key={user._id}>
+                    <td className="border border-gray-300 p-2">{user.name}</td>
+                    <td className="border border-gray-300 p-2">{user.email}</td>
+                    <td className="border border-gray-300 p-2">{className}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
       )}
     </div>
   );
