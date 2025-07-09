@@ -28,7 +28,7 @@ const Sidebar = ({ user, isOpen, toggleSidebar }) => {
       <ul className="space-y-2">
         {user?.role !== "student" && (
           <li>
-            <NavLink to="/" end className={navClass} onClick={toggleSidebar}>
+            <NavLink to="/" end className={navClass} onClick={() => { if (window.innerWidth < 768) toggleSidebar(); }}>
               <Home className="mr-2 w-4 h-4" />
               Dashboard
             </NavLink>
@@ -37,7 +37,7 @@ const Sidebar = ({ user, isOpen, toggleSidebar }) => {
 
         {user?.role === "teacher" && (
           <li>
-            <NavLink to="/mark-attendance" className={navClass} onClick={toggleSidebar}>
+            <NavLink to="/mark-attendance" className={navClass} onClick={() => { if (window.innerWidth < 768) toggleSidebar(); }}>
               <ClipboardList className="mr-2 w-4 h-4" />
               Mark Attendance
             </NavLink>
@@ -47,13 +47,13 @@ const Sidebar = ({ user, isOpen, toggleSidebar }) => {
         {user?.role === "student" && (
           <>
             <li>
-              <NavLink to="/studentsdashboard" className={navClass} onClick={toggleSidebar}>
+              <NavLink to="/studentsdashboard" className={navClass} onClick={() => { if (window.innerWidth < 768) toggleSidebar(); }}>
                 <Home className="mr-2 w-4 h-4" />
                 Dashboard
               </NavLink>
             </li>
             <li>
-              <NavLink to="/attendance-report" className={navClass} onClick={toggleSidebar}>
+              <NavLink to="/attendance-report" className={navClass} onClick={() => { if (window.innerWidth < 768) toggleSidebar(); }}>
                 <ClipboardList className="mr-2 w-4 h-4" />
                 My Attendance
               </NavLink>
@@ -65,13 +65,13 @@ const Sidebar = ({ user, isOpen, toggleSidebar }) => {
           <>
             <h3 className="text-sm font-semibold mt-6 mb-2">ADMINISTRATION</h3>
             <li>
-              <NavLink to="/user-management" className={navClass} onClick={toggleSidebar}>
+              <NavLink to="/user-management" className={navClass} onClick={() => { if (window.innerWidth < 768) toggleSidebar(); }}>
                 <Users className="mr-2 w-4 h-4" />
                 User Management
               </NavLink>
             </li>
             <li>
-              <NavLink to="/classes" className={navClass} onClick={toggleSidebar}>
+              <NavLink to="/classes" className={navClass} onClick={() => { if (window.innerWidth < 768) toggleSidebar(); }}>
                 <BookOpen className="mr-2 w-4 h-4" />
                 Class Management
               </NavLink>
