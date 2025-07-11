@@ -19,7 +19,7 @@ const AttendanceReport = () => {
           setError("Unexpected data format received from server.");
           setAttendanceData([]);
         }
-      } catch (err) {
+      } catch {
         setError("Failed to fetch attendance report.");
       } finally {
         setLoading(false);

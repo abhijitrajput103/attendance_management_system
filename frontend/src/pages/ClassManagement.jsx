@@ -22,7 +22,7 @@ const ClassManagement = () => {
       const response = await axiosInstance.get("/classes");
       setClasses(response.data);
       setError(null);
-    } catch (err) {
+    } catch {
       setError("Failed to fetch classes.");
     } finally {
       setLoading(false);
@@ -89,7 +89,7 @@ const ClassManagement = () => {
       });
       cancelEdit();
       fetchClasses();
-    } catch (err) {
+    } catch {
       setError("Failed to update class.");
     }
   };
@@ -101,7 +101,7 @@ const ClassManagement = () => {
     try {
       await axiosInstance.delete(`/classes/${classId}`);
       fetchClasses();
-    } catch (err) {
+    } catch {
       setError("Failed to delete class.");
     }
   };
@@ -266,7 +266,7 @@ const ClassManagement = () => {
                     setAssignTeacherId("");
                     fetchClasses();
                     setError(null);
-                  } catch (err) {
+                  } catch  {
                     setError("Failed to assign teacher.");
                   }
                 }}

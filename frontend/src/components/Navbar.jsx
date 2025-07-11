@@ -17,23 +17,16 @@ const Navbar = ({ user, toggleSidebar }) => {
         {user?.role.charAt(0).toUpperCase() + user?.role.slice(1)} Dashboard
       </div>
 
-      {/* Search Bar (can be hidden on mobile if needed) */}
-      <div className="flex-grow flex justify-center sm:justify-start px-4">
-        <div className="relative w-full max-w-md">
-          <input
-            type="text"
-            placeholder="Search..."
-            className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:border-blue-500"
-          />
-          <Search className="absolute right-3 top-2.5 text-gray-400 h-4 w-4" />
-        </div>
-      </div>
-
       {/* User Info */}
       <div className="flex items-center gap-3">
         {user && user.name && (
           <div className="flex items-center gap-2">
-            <div className="w-9 h-9 rounded-full bg-indigo-500 flex items-center justify-center text-white font-semibold">
+            <div
+              onClick={() => {
+                if (window.innerWidth < 640) toggleSidebar();
+              }}
+              className="w-9 h-9 rounded-full bg-indigo-500 flex items-center justify-center text-white font-semibold cursor-pointer"
+            >
               {user.name[0].toUpperCase()}
             </div>
             <div className="hidden sm:flex flex-col text-sm">
@@ -42,7 +35,6 @@ const Navbar = ({ user, toggleSidebar }) => {
             </div>
           </div>
         )}
-        <Bell className="w-5 h-5 text-gray-600 hidden sm:block" />
       </div>
     </nav>
   );
